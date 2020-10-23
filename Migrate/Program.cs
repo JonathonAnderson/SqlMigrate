@@ -50,16 +50,6 @@ namespace Migrate
                     {
                         DataRow rowSrc = (DataRow)rowEnumSrc.Current;
 
-                        string insertString =   "INSERT INTO Sales.Test (OrderID, CustomerID, SalespersonPersonID, " +
-                                                "PickedByPersonID, ContactPersonID, BackorderOrderID, OrderDate, ExpectedDeliveryDate, " +
-                                                "CustomerPurchaseOrderNumber, IsUndersupplyBackordered, Comments, DeliveryInstructions, " +
-                                                "InternalComments, PickingCompletedWhen, LastEditedBy, LastEditedWhen) " +
-                                                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
-                        OdbcCommand command = connectionSrc.CreateCommand();
-                        command.Connection  = connectionSrc;
-                        command.CommandText = insertString;
-
                         // Setup for duplicate detection
                         var rowEnumDst  = tableDst.Rows.GetEnumerator();
                         bool matchFound = false;
@@ -72,6 +62,17 @@ namespace Migrate
                         }
 
                         if (matchFound) continue;
+
+                        // The ? in insert strings are replaced by command parameters according to their order in the column list
+                        string insertString = "INSERT INTO Sales.Test (OrderID, CustomerID, SalespersonPersonID, " +
+                                                "PickedByPersonID, ContactPersonID, BackorderOrderID, OrderDate, ExpectedDeliveryDate, " +
+                                                "CustomerPurchaseOrderNumber, IsUndersupplyBackordered, Comments, DeliveryInstructions, " +
+                                                "InternalComments, PickingCompletedWhen, LastEditedBy, LastEditedWhen) " +
+                                                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+                        OdbcCommand command = connectionSrc.CreateCommand();
+                        command.Connection = connectionSrc;
+                        command.CommandText = insertString;
 
                         command.Parameters.Add("@OrderID",                      OdbcType.Int).Value         = rowSrc[0];
                         command.Parameters.Add("@CustomerID",                   OdbcType.Int).Value         = rowSrc[1];
