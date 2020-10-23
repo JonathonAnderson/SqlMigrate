@@ -71,8 +71,8 @@ namespace Migrate
                                                 "InternalComments, PickingCompletedWhen, LastEditedBy, LastEditedWhen) " +
                                                 "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-                        OdbcCommand command = connectionSrc.CreateCommand();
-                        command.Connection = connectionSrc;
+                        OdbcCommand command = connectionDst.CreateCommand();
+                        command.Connection = connectionDst;
                         command.CommandText = insertString;
 
                         command.Parameters.Add("@OrderID",                      OdbcType.Int).Value         = rowSrc[0];
