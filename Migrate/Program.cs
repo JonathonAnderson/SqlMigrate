@@ -55,6 +55,7 @@ namespace Migrate
                         bool matchFound = false;
 
                         // Duplicate detection happens here and skips the current row if there is a match
+                        // For some reason rowDst[0] == rowSrc[0] wasn't working. I dunno why. The Equals() function worked though
                         while (!matchFound && rowEnumDst.MoveNext())
                         {
                             DataRow rowDst = (DataRow)rowEnumDst.Current;
